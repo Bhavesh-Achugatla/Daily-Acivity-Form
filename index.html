@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Activity Report</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0F2D4A;--blue:#1A4A7A;--accent:#2563EB;--accent-md:#DBEAFE;--text:#0F172A;--text-2:#475569;--text-3:#94A3B8;--border:#E2E8F0;--border-2:#CBD5E1;--bg:#F8FAFC;--white:#FFFFFF;--success:#059669;--success-bg:#ECFDF5;--success-bd:#A7F3D0;--error:#DC2626;--error-bg:#FEF2F2}
+html{height:100%}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100%;padding:40px 20px 60px}
+.page{max-width:680px;margin:0 auto}
+.page-header{background:var(--navy);border-radius:14px 14px 0 0;padding:32px 36px 28px;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:4px;background:var(--accent)}
+.header-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:#7CB4D8;margin-bottom:8px}
+.header-title{font-size:26px;font-weight:600;color:#fff;letter-spacing:-0.02em;line-height:1.15}
+.header-sub{font-size:13px;color:#A8C8E8;margin-top:6px;font-weight:300}
+.form-body{background:var(--white);border:1px solid var(--border);border-top:none;border-radius:0 0 14px 14px;padding:36px 36px 32px}
+.section{margin-bottom:32px}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.section-number{width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.section-title{font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--navy)}
+.field{margin-bottom:16px}
+.field-label{display:block;font-size:13px;font-weight:500;color:var(--text-2);margin-bottom:6px}
+.field-label span{color:var(--error);margin-left:2px}
+select,input[type="text"],input[type="number"]{display:block;width:100%;height:42px;padding:0 14px;border:1px solid var(--border-2);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--white);outline:none;transition:border-color 0.15s,box-shadow 0.15s;-webkit-appearance:none;appearance:none}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
+select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,0.1)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.count-wrap{position:relative;max-width:240px}
+.count-wrap input{padding-right:70px}
+.count-suffix{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text-3);pointer-events:none}
+.meetings-area{margin-top:4px}
+.empty-state{border:1px dashed var(--border-2);border-radius:10px;padding:28px 20px;text-align:center;color:var(--text-3);font-size:13px;line-height:1.6;background:var(--bg)}
+.meeting-card{border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:10px;background:var(--bg);animation:fadeIn 0.2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.meeting-card-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.meeting-pill{width:22px;height:22px;border-radius:50%;background:var(--accent-md);color:var(--accent);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.meeting-label{font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-2)}
+.action-bar{display:flex;align-items:center;gap:12px;padding-top:24px;border-top:1px solid var(--border);flex-wrap:wrap}
+.btn-submit{height:44px;padding:0 28px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.15s,transform 0.1s}
+.btn-submit:hover{background:var(--blue)}
+.btn-submit:active{transform:scale(0.98)}
+.btn-submit:disabled{background:var(--text-3);cursor:not-allowed}
+.btn-clear{height:44px;padding:0 20px;background:transparent;color:var(--text-2);border:1px solid var(--border-2);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;transition:background 0.15s}
+.btn-clear:hover{background:var(--bg)}
+.action-note{margin-left:auto;font-size:12px;color:var(--text-3)}
+.alert{display:none;margin-top:16px;padding:14px 16px;border-radius:8px;font-size:13px;line-height:1.6}
+.alert.success{background:var(--success-bg);border:1px solid var(--success-bd);color:var(--success)}
+.alert.error-alert{background:var(--error-bg);border:1px solid #FECACA;color:var(--error)}
+.spinner-wrap{display:none;position:fixed;inset:0;background:rgba(15,45,74,0.75);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.spinner-wrap.show{display:flex}
+.spinner{width:36px;height:36px;border:3px solid rgba(255,255,255,0.25);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner-txt{color:#fff;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif}
+.page-footer{text-align:center;margin-top:20px;font-size:11px;color:var(--text-3);letter-spacing:0.04em}
+@media(max-width:520px){.page-header,.form-body{padding:24px 20px}.grid2{grid-template-columns:1fr}.action-note{display:none}}
+</style>
+</head>
+<body>
+<div class="spinner-wrap" id="spinnerWrap">
+  <div class="spinner"></div>
+  <div class="spinner-txt">Submitting your report...</div>
+</div>
+<div class="page">
+  <div class="page-header">
+    <div class="header-eyebrow">Field Activity Tracking System</div>
+    <div class="header-title">Daily Activity Report</div>
+    <div class="header-sub">Submit your end-of-day activity summary</div>
+  </div>
+  <div class="form-body">
+    <div class="section">
+      <div class="section-header"><div class="section-number">1</div><div class="section-title">Employee Details</div></div>
+      <div class="field">
+        <label class="field-label">Full Name <span>*</span></label>
+        <input type="text" id="empName" placeholder="Enter your full name">
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header"><div class="section-number">2</div><div class="section-title">Work Location</div></div>
+      <div class="grid2">
+        <div class="field">
+          <label class="field-label">Working from <span>*</span></label>
+          <select id="workLoc" onchange="handleLoc()">
+            <option value="">— Select —</option>
+            <option value="Home">Home</option>
+            <option value="Office">Office</option>
+          </select>
+        </div>
+        <div class="field" id="officeWrap" style="display:none">
+          <label class="field-label">Office location <span>*</span></label>
+          <select id="officeSel">
+            <option value="">— Select office —</option>
+            <option>Dadar Office</option>
+            <option>Airoli Office</option>
+            <option>Lower Parel Office</option>
+            <option>Pune Office</option>
+            <option>Dubai Office</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header"><div class="section-number">3</div><div class="section-title">Meeting Details</div></div>
+      <div class="field">
+        <label class="field-label">Total meetings conducted today <span>*</span></label>
+        <div class="count-wrap">
+          <input type="number" id="meetCount" min="0" max="30" placeholder="0" oninput="genMeetings()">
+          <span class="count-suffix">meetings</span>
+        </div>
+      </div>
+      <div class="meetings-area" id="meetingsArea">
+        <div class="empty-state">Enter the number of meetings above<br>to log individual meeting details</div>
+      </div>
+    </div>
+    <div class="action-bar">
+      <button class="btn-submit" id="submitBtn" onclick="submitForm()">Submit Report</button>
+      <button class="btn-clear" onclick="clearForm()">Clear Form</button>
+      <span class="action-note">All fields marked * are required</span>
+    </div>
+    <div class="alert success" id="successAlert"></div>
+    <div class="alert error-alert" id="errorAlert"></div>
+  </div>
+  <div class="page-footer">CONFIDENTIAL &nbsp;·&nbsp; FOR INTERNAL USE ONLY &nbsp;·&nbsp; NEOSOFT TECHNOLOGIES</div>
+</div>
+<script>
+// ══════════════════════════════════════════
+// STEP 1: Paste your Google Apps Script URL here after setup
+var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwYqvm6biiKMlCvJrMYCyvaFdJd-BM3erAjimBeK2B3Zz9MGw_A6jUqAWQrTUHEXVW72g/exec';
+// ══════════════════════════════════════════
+function pad(n){return n<10?'0'+n:''+n}
+function fmtDate(d){var mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return pad(d.getDate())+'-'+mn[d.getMonth()]+'-'+d.getFullYear()}
+function fmtDay(d){return['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()]}
+function showAlert(type,msg){var s=document.getElementById('successAlert'),e=document.getElementById('errorAlert');s.style.display='none';e.style.display='none';if(type==='success'){s.innerHTML=msg;s.style.display='block';}else{e.innerHTML=msg;e.style.display='block';}}
+function handleLoc(){var v=document.getElementById('workLoc').value;document.getElementById('officeWrap').style.display=v==='Office'?'flex':'none';if(v!=='Office')document.getElementById('officeSel').value='';}
+function genMeetings(){
+  var n=parseInt(document.getElementById('meetCount').value)||0;
+  var area=document.getElementById('meetingsArea');
+  area.innerHTML='';
+  if(n<=0){area.innerHTML='<div class="empty-state">Enter the number of meetings above<br>to log individual meeting details</div>';return;}
+  for(var i=1;i<=n;i++){
+    var card=document.createElement('div');card.className='meeting-card';
+    card.innerHTML='<div class="meeting-card-header"><div class="meeting-pill">'+i+'</div><div class="meeting-label">Meeting '+i+'</div></div>'+
+    '<div class="grid2"><div class="field"><label class="field-label">Client / Customer name <span>*</span></label><input type="text" id="cn'+i+'" placeholder="Enter client name"></div>'+
+    '<div class="field"><label class="field-label">Meeting mode <span>*</span></label><select id="mt'+i+'"><option value="">— Select mode —</option><option value="Virtual">Virtual</option><option value="Physical">Physical</option></select></div></div>';
+    area.appendChild(card);
+  }
+}
+function submitForm(){
+  var name=document.getElementById('empName').value.trim();
+  if(!name){showAlert('error','Please enter your full name.');return;}
+  var loc=document.getElementById('workLoc').value;
+  if(!loc){showAlert('error','Please select your work location.');return;}
+  var off='';
+  if(loc==='Office'){off=document.getElementById('officeSel').value;if(!off){showAlert('error','Please select your office location.');return;}}
+  var n=parseInt(document.getElementById('meetCount').value)||0;
+  var meets=[];
+  for(var i=1;i<=n;i++){
+    var cn=document.getElementById('cn'+i)?document.getElementById('cn'+i).value.trim():'';
+    var mt=document.getElementById('mt'+i)?document.getElementById('mt'+i).value:'';
+    if(!cn){showAlert('error','Please enter client name for Meeting '+i+'.');return;}
+    if(!mt){showAlert('error','Please select meeting mode for Meeting '+i+'.');return;}
+    meets.push({client:cn,mode:mt});
+  }
+  var now=new Date();
+  var dt=fmtDate(now),day=fmtDay(now),tm=pad(now.getHours())+':'+pad(now.getMinutes())+':'+pad(now.getSeconds());
+  var rows=[];
+  if(n===0){rows.push({date:dt,day:day,time:tm,employeeName:name,workLocation:loc,office:off,totalMeetings:0,meetingNumber:'',clientName:'',meetingMode:''});}
+  else{for(var j=0;j<meets.length;j++){rows.push({date:dt,day:day,time:tm,employeeName:name,workLocation:loc,office:off,totalMeetings:n,meetingNumber:j+1,clientName:meets[j].client,meetingMode:meets[j].mode});}}
+  document.getElementById('spinnerWrap').classList.add('show');
+  document.getElementById('submitBtn').disabled=true;
+  var promises=rows.map(function(row){return fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(row)});});
+  Promise.all(promises).then(function(){
+    document.getElementById('spinnerWrap').classList.remove('show');
+    document.getElementById('submitBtn').disabled=false;
+    showAlert('success','<strong>Report submitted successfully!</strong><br>Entry for <strong>'+name+'</strong> on <strong>'+dt+' ('+day+')</strong> at <strong>'+tm+'</strong> has been recorded.');
+    setTimeout(function(){clearForm();},8000);
+  }).catch(function(){
+    document.getElementById('spinnerWrap').classList.remove('show');
+    document.getElementById('submitBtn').disabled=false;
+    showAlert('error','Submission failed. Please check your connection and try again.');
+  });
+}
+function clearForm(){
+  document.getElementById('empName').value='';document.getElementById('workLoc').value='';document.getElementById('officeSel').value='';document.getElementById('officeWrap').style.display='none';document.getElementById('meetCount').value='';
+  document.getElementById('meetingsArea').innerHTML='<div class="empty-state">Enter the number of meetings above<br>to log individual meeting details</div>';
+  document.getElementById('successAlert').style.display='none';document.getElementById('errorAlert').style.display='none';
+}
+</script>
+</body>
+</html>
